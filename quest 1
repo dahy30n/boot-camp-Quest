@@ -1,0 +1,56 @@
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> status(4);
+bool check = false;
+
+void setPotion(int count, int* p_HPPotion, int* p_MPPotion) {
+    if (count == 1 && *p_HPPotion >0)  {
+        status[0] += 20;
+        *p_HPPotion -= 1;
+    }
+    else if (count == 2 && *p_MPPotion > 0) {
+        status[1] += 20;
+        *p_MPPotion -= 1;
+    }
+    else if (count == 3) status[2] *= 2;
+    else if (count == 4) status[3] *= 2;
+    else if (count == 5) {
+        for (int k = 0; k<4;k++) cout << status[k];
+    }
+    else if (count==6) {
+        (*p_MPPotion)++;
+        (*p_HPPotion)++;
+    }
+    else if (count == 0) check = true;
+}
+int main() {
+    
+    for (int i = 1; i < 4; i++) {
+        status[i] = 0;
+    }
+    
+    while (cin >> status[0] >> status[1]) {
+        if (status[0] <= 50 || status[1] <= 50) {
+            cout << "다시 입력하세요.\n";
+        }   
+        else break;
+    }
+    while (cin >> status[2] >> status[3]) {
+        if (status[2] <= 0 || status[3] <= 0) {
+            cout << "다시 입력하세요.\n";
+        }   
+        else break;
+    }
+    
+    int hp = 5, mp = 5, n = 0;
+    while (true) {
+        cout << "1.HP UP / 2.MP UP / 3.공격력 UP / 4.방어력 UP / 5.현재 능력치 / 6.Level Up / 0.나가기" << "\n";
+        cin >> n; 
+        setPotion(n, &hp, &mp);    
+        if (check == true) break;
+    }
+    
+}
