@@ -1,0 +1,42 @@
+#include <iostream>
+using namespace std;
+
+class Player {
+public:
+    virtual void attack() = 0;
+    virtual ~Player() {}
+};
+
+class Warrior : public Player {
+public:
+    void attack() override { cout << "검을 휘두릅니다!" << endl; }
+};
+class Magician : public Player {
+public:
+    void attack() override { cout << "마법 화살을 쏩니다!" << endl; }
+};
+class Thief : public Player {
+public:
+    void attack() override { cout << "빠르게 단검으로 공격합니다!" << endl; }
+};
+class Archer : public Player {
+public:
+    void attack() override { cout << "화살을 발사합니다!" << endl; }
+};
+
+int main() {
+    Player* player = nullptr;
+    int a;
+    cin >> a;
+
+    switch (a) {
+    case 1: player = new Warrior(); break;
+    case 2: player = new Magician(); break;
+    case 3: player = new Thief(); break;
+    case 4: player = new Archer(); break;
+    default: cout << "잘못 입력했습니다." << endl;
+    }
+
+    if (player) player->attack();
+    delete player;
+}
