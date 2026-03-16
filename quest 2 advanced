@@ -1,0 +1,192 @@
+#include <iostream>
+using namespace std;
+
+class Monster;
+
+class Player {
+protected:
+    string nickname;
+    int hp = 100;
+    int def = 10;
+    int atk = 20;
+
+public:
+    virtual void attack() = 0;
+    virtual ~Player() {}
+    virtual void attack(Monster* monster) = 0;
+    void printPlayerStatus();
+
+    int getDef() { return def; }
+    int getHp() { return hp; }
+
+    void setHp(int newHp) {
+        hp = newHp;
+        cout << hp;
+    }
+};
+
+class Warrior : public Player {
+public:
+    void attack(Monster* monster) override;
+    void attack() override {
+        cout << "검을 휘두릅니다!" << endl;
+    }
+};
+
+class Magician : public Player {
+public:
+    void attack(Monster* monster) override;
+    void attack() override {
+        cout << "마법 화살을 쏩니다!" << endl;
+    }
+};
+
+class Thief : public Player {
+public:
+    void attack(Monster* monster) override;
+    void attack() override {
+        cout << "빠르게 단검으로 공격합니다!" << endl;
+    }
+};
+
+class Archer : public Player {
+public:
+    void attack(Monster* monster) override;
+    void attack() override {
+        cout << "화살을 발사합니다!" << endl;
+    }
+};
+
+class Monster {
+public:
+    Monster(string n) : name(n), HP(10), power(30), defence(10), speed(10) {}
+
+    void attack(Player& player) {
+        int dmg;
+        dmg = power - player.getDef();
+        if (dmg <= 0) dmg = 1;
+        player.setHp(player.getHp() - dmg);
+        cout << dmg << endl;
+        if (player.getHp() > 0) cout << player.getHp() << endl;
+    }
+
+    void attack(Player* player);
+
+    string getName() { return name; }
+    int getHP() { return HP; }
+    int getPower() { return power; }
+    int getDefence() { return defence; }
+    int getSpeed() { return speed; }
+
+    void setName(string n) { name = n; }
+    void setHP(int hp) { HP = hp; }
+    void setPower(int p) { power = p; }
+    void setDefence(int d) { defence = d; }
+    void setSpeed(int s) { speed = s; }
+
+protected:
+    string name;
+    int HP;
+    int power;
+    int defence;
+    int speed;
+};
+
+void Warrior::attack(Monster* monster) {
+    int dmg = atk - monster->getDefence();
+    if (dmg <= 0) dmg = 1;
+
+    cout << monster->getName() << "에게 " << dmg << " 데미지로 1회 공격" << endl;
+    monster->setHP(monster->getHP() - dmg);
+
+    if (monster->getHP() > 0) {
+        cout << "몬스터 남은 HP: " << monster->getHP() << endl;
+    } else {
+        cout << "플레이어의 승리!" << endl;
+    }
+}
+
+void Magician::attack(Monster* monster) {
+    int dmg = atk - monster->getDefence();
+    if (dmg <= 0) dmg = 1;
+
+    cout << monster->getName() << "에게 " << dmg << " 데미지로 1회 공격" << endl;
+    monster->setHP(monster->getHP() - dmg);
+
+    if (monster->getHP() > 0) {
+        cout << "몬스터 남은 HP: " << monster->getHP() << endl;
+    } else {
+        cout << "플레이어의 승리!" << endl;
+    }
+}
+
+void Thief::attack(Monster* monster) {
+    int dmg = atk - monster->getDefence();
+    if (dmg <= 0) dmg = 1;
+
+    int hitDmg = dmg / 5;
+    if (hitDmg == 0) hitDmg = 1;
+
+    for (int i = 0; i < 5; i++) {
+        cout << monster->getName() << "에게 " << hitDmg << " 데미지로 5회 공격" << endl;
+    }
+    monster->setHP(monster->getHP() - dmg);
+
+    if (monster->getHP() > 0) {
+        cout << "몬스터 남은 HP: " << monster->getHP() << endl;
+    } else {
+        cout << "플레이어의 승리!" << endl;
+    }
+}
+
+void Archer::attack(Monster* monster) {
+    int dmg = atk - monster->getDefence();
+    if (dmg <= 0) dmg = 1;
+
+    int hitDmg = dmg / 3;
+    if (hitDmg == 0) hitDmg = 1;
+
+    for (int i = 0; i < 3; i++) {
+        cout << monster->getName() << "에게 " << hitDmg << " 데미지로 3회 공격" << endl;
+    }
+    monster->setHP(monster->getHP() - dmg);
+
+    if (monster->getHP() > 0) {
+        cout << "몬스터 남은 HP: " << monster->getHP() << endl;
+    } else {
+        cout << "플레이어의 승리!" << endl;
+    }
+}
+
+int main() {
+    Player* player = nullptr;
+    Player* attacking = nullptr;
+    Monster* monster = nullptr;
+    int a;
+
+    monster = new Monster("Slime");
+    cin >> a;
+
+    switch (a) {
+    case 1:
+        player = new Warrior();
+        player->attack();
+        player->attack(monster);
+        break;
+    case 2:
+        player = new Magician();
+        player->attack();
+        break;
+    case 3:
+        player = new Thief();
+        player->attack();
+        break;
+    case 4:
+        player = new Archer();
+        player->attack();
+        break;
+    }
+
+    delete player;
+    delete monster;
+}
